@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="sample-project"  basedir=".">
+
+	<target name="classes">
+		<javac srcdir="src" destdir="target/classes"/>
+	</target>
+
+</project>
