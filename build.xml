@@ -1,8 +1,64 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<project name="sample-project"  basedir=".">
+<?xml version="1.0"?>
+<project name="sample-project" default="main" basedir=".">
+	<property name="build.dir" location="build"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>
+	<property name="jar.dir" location="${build.dir}/jar"/>
+	<property name="src.dir" location="src/main"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="project.version" value="1.0.0"/>
+	<property name="groupid" value="com.example"/>
 
-	<target name="classes">
-		<javac srcdir="src" destdir="target/classes"/>
+	<path id="project.classpath">
+		<pathelement location="${classes.dir}"/>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="clean" description="Clean output directories">
+		<delete dir="${build.dir}"/>
 	</target>
 
+	<target name="init">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+	</target>
+
+	<!--	<target name="extract" depends="init">-->
+	<!--		<unjar dest="${classes.dir}">-->
+	<!--			<fileset dir="${lib.dir}" includes="**/*.jar"/>-->
+	<!--		</unjar>-->
+	<!--	</target>-->
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" failonerror="true" includeantruntime="false">
+			<classpath refid="project.classpath"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="${jar.dir}/${ant.project.name}-${project.version}.jar" basedir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<patternset>
+					<exclude name="**/*.java"/>
+				</patternset>
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="${groupid}.BuildApplication"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="main" depends="clean, jar">
+		<echo message="execute all task"/>
+	</target>
+
+	<target name="run" depends="clean, jar">
+		<java fork="true" classname="${groupid}.BuildApplication">
+			<classpath>
+				<path refid="project.classpath"/>
+				<path location="${jar.dir}/${ant.project.name}-${project.version}.jar"/>
+			</classpath>
+		</java>
+	</target>
 </project>
