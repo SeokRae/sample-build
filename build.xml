@@ -24,11 +24,11 @@
 		<mkdir dir="${classes.dir}"/>
 	</target>
 
-	<!--	<target name="extract" depends="init">-->
-	<!--		<unjar dest="${classes.dir}">-->
-	<!--			<fileset dir="${lib.dir}" includes="**/*.jar"/>-->
-	<!--		</unjar>-->
-	<!--	</target>-->
+	<target name="extract" depends="init">
+		<unjar dest="${classes.dir}">
+			<fileset dir="${lib.dir}" includes="**/*.jar"/>
+		</unjar>
+	</target>
 
 	<target name="compile" depends="init">
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" failonerror="true" includeantruntime="false">
@@ -54,11 +54,6 @@
 	</target>
 
 	<target name="run" depends="clean, jar">
-		<java fork="true" classname="${groupid}.BuildApplication">
-			<classpath>
-				<path refid="project.classpath"/>
-				<path location="${jar.dir}/${ant.project.name}-${project.version}.jar"/>
-			</classpath>
-		</java>
+		<java fork="true" jar="${jar.dir}/${ant.project.name}-${project.version}.jar"/>
 	</target>
 </project>
